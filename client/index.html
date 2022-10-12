@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+        const handleResponse = async(response) => {
+
+            //Grab the character-field section
+            const content = document.querySelector('#character-field');
+
+            // //Based on the status code, display something
+            // switch (response.status) {
+            //     case 200: //success
+            //         content.innerHTML = `<b>Success</b>`;
+            //         break;
+            //     case 201: //created
+            //         content.innerHTML = '<b>Created</b>';
+            //         break;
+            //     case 204: //updated (no response back from server)
+            //         content.innerHTML = '<b>Updated (No Content)</b>';
+            //         return;
+            //     case 400: //bad request
+            //         content.innerHTML = `<b>Bad Request</b>`;
+            //         break;
+            //     default: //any other status code
+            //         content.innerHTML = `Error code not implemented by client.`;
+            //         break;
+            // }
+
+            //Parse the response to json. 
+            let characters = await response.json();
+
+            // make an array of the characters so that we can access them later through index
+            let index = [];
+
+            // build the index
+            for (let character in characters) {
+                index.push(character);
+            }
+            //If we have a message, display it.
+            console.log(characters[index[0]]);
+            console.log(index.length);
+            console.log(characters.System.personality);
+
+            displayCharacters(characters, index);
+        }
+
+        const displayCharacters = (characters, index) => {
+            const characterField = document.querySelector("#character-field");
+
+            // create character cards and fill them in with the characters' data
+            for (let i = 0; i < index.length; i++) {
+                console.log("displaying character " + i);
+                // card div that stores all info of a character
+                let div = document.createElement("div");
+                div.id = characters[index[i]].name + "-info-card";
+                div.className = "character-card";
+
+                let name = document.createElement("h3");
+                name.innerHTML = "Name: " + characters[index[i]].name;
+
+                let job = document.createElement("h3");
+                job.innerHTML = "Job: " + characters[index[i]].job;
+
+                let personality = document.createElement("h3");
+                personality.innerHTML = "Personality: " + characters[index[i]].personality;
+
+                div.appendChild(name);
+                div.appendChild(job);
+                div.appendChild(personality);
+
+                characterField.appendChild(div);
+            }
+        }
+
+        const sendFetchRequest = (url, acceptedType) => {
+            //make a GET request, set the 'Accept' header in the headers object            
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Accept': acceptedType
+                },
+            }
+
+            // fetch response from the server
+            const fetchPromise = fetch(url, options);
+            fetchPromise.then((response) => {
+                handleResponse(response)
+            });
+        };
+
+
+        //Uses fetch to send a postRequest. Marked as async because we use await
+        //within it.
+        const sendPost = async(nameForm) => {
+            //Grab all the info from the form
+            const nameAction = nameForm.getAttribute('action');
+            const nameMethod = nameForm.getAttribute('method');
+
+            const nameField = nameForm.querySelector('#nameField');
+            const ageField = nameForm.querySelector('#ageField');
+
+            //Build a data string in the FORM-URLENCODED format.
+            const formData = `name=${nameField.value}&age=${ageField.value}`;
+
+            //Make a fetch request and await a response. Set the method to
+            //the one provided by the form (POST). Set the headers. Content-Type
+            //is the type of data we are sending. Accept is the data we would like
+            //in response. Then add our FORM-URLENCODED string as the body of the request.
+            let response = await fetch(nameAction, {
+                method: nameMethod,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                },
+                body: formData,
+            });
+
+            //Once we have a response, handle it.
+            handleResponse(response);
+        };
+
+        const init = () => {
+            // grab character data from the server
+            sendFetchRequest('/getCharacters', 'application/json');
+
+
+        }
+
+        window.onload = init;
+    </script>
+</head>
+
+<body>
+    <h1>My Character World</h1>
+    <section id="top">
+        <h2>Add New Characters</h2>
+        <form id="nameForm" action="/addUser" method="post">
+            <label for="name">Name: </label>
+            <input id="nameField" type="text" name="name" />
+
+            <label for="job">Job: </label>
+            <input id="jobField" type="text" name="job" />
+
+            <label for="personality">Personality: </label>
+            <input id="personalityField" type="text" name="personality" />
+
+            <input type="submit" value="Add" />
+        </form>
+    </section>
+    <div id="character-field">
+        <div class="character-card">
+            <h3>Name: </h3>
+            <h3>Job: </h3>
+            <h3>Personality: </h3>
+        </div>
+
+    </div>
+</body>
+
+</html>
