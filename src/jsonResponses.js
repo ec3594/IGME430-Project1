@@ -16,7 +16,7 @@ const respondJSONMeta = (request, response, status) => {
 
 //return users object as JSON
 const getCharacters = (request, response) => {
-    console.log(data.characters);
+    console.log(data.key);
     const responseJSON = data.characters;
 
     respondJSON(request, response, 200, responseJSON);
@@ -38,18 +38,21 @@ const addCharacter = (request, response, body) => {
     //default status code to 204 updated
     let responseCode = 204;
 
+    let characters = data.characters;
+
     //If the character doesn't exist yet
-    if (!users[body.name]) {
+    if (!characters[body.name]) {
 
         //Set the status code to 201 (created) and create an empty user
         responseCode = 201;
-        users[body.name] = {};
+        characters[body.name] = {};
+        // characters.push({ name: `${body.name}` });
     }
 
     //add or update fields for this character's name
-    users[body.name].name = body.name;
-    users[body.name].job = body.job;
-    users[body.name].personality = body.personality;
+    characters[body.name].name = body.name;
+    characters[body.name].job = body.job;
+    characters[body.name].personality = body.personality;
 
     //if response is created, then set our created message
     //and sent response with a message

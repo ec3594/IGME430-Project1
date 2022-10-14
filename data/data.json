@@ -1,8 +1,8 @@
 {
     "characters": {
         "System": {
-            "name": "System",
-            "job": "professor",
+            "name": "Mr. System",
+            "job": "system",
             "personality": "optimistic"
         },
         "Eva": {
@@ -10,7 +10,7 @@
             "job": "animator",
             "personality": "perfectionist"
         },
-        "Kitty": {
+        "Alice": {
             "name": "Alice",
             "job": "violinist",
             "personality": "cheerful"

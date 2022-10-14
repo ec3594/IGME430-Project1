@@ -9,6 +9,41 @@ const jsonHandler = require('./jsonResponses.js');
 // set port
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+//handle POST requests
+const handlePost = (request, response, parsedUrl) => {
+
+    //If they go to /addUser
+    if (parsedUrl.pathname === '/addCharacter') {
+
+        //Call our below parseBody handler, and in turn pass in the
+        //jsonHandler.addUser function as the handler callback function.
+        parseBody(request, response, jsonHandler.addCharacter);
+    }
+};
+
+//Recompiles the body of a request, and then calls the appropriate handler once completed
+const parseBody = (request, response, handler) => {
+
+    const body = [];
+
+    request.on('error', (err) => {
+        console.dir(err);
+        response.statusCode = 400;
+        response.end();
+    });
+
+    request.on('data', (chunk) => {
+        body.push(chunk);
+    });
+
+    request.on('end', () => {
+        const bodyString = Buffer.concat(body).toString();
+        const bodyParams = query.parse(bodyString);
+
+        handler(request, response, bodyParams);
+    });
+};
+
 // randomly generate affirmations
 const respond = () => {
     fetch('http://www.affirmations.dev/').then(res => res.json()).then(data => console.log(data));
@@ -46,7 +81,7 @@ const onRequest = (request, response) => {
             break;
 
         case '/addCharacter':
-            jsonHandler.addCharacters(request, response);
+            handlePost(request, response, parsedUrl);
             break;
 
         default:

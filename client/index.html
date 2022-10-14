@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script>
         const handleResponse = async(response) => {
+            console.log("handling");
 
             //Grab the character-field section
             const content = document.querySelector('#character-field');
@@ -38,40 +39,39 @@
             //Parse the response to json. 
             let characters = await response.json();
 
-            // make an array of the characters so that we can access them later through index
-            let index = [];
+            let names = Object.keys(characters);
+            console.log(names.length);
 
-            // build the index
-            for (let character in characters) {
-                index.push(character);
+            for (let name of names) {
+                console.log(name);
+                const character = characters[name];
+                console.log(character.name);
+                console.log(character.job);
+                console.log(character.personality);
             }
-            //If we have a message, display it.
-            console.log(characters[index[0]]);
-            console.log(index.length);
-            console.log(characters.System.personality);
 
-            displayCharacters(characters, index);
+            displayCharacters(characters, names);
         }
 
-        const displayCharacters = (characters, index) => {
+        const displayCharacters = (characters, names) => {
             const characterField = document.querySelector("#character-field");
 
             // create character cards and fill them in with the characters' data
-            for (let i = 0; i < index.length; i++) {
-                console.log("displaying character " + i);
+            for (let i = 0; i < names.length; i++) {
+                let n = names[i];
                 // card div that stores all info of a character
                 let div = document.createElement("div");
-                div.id = characters[index[i]].name + "-info-card";
+                div.id = characters[n].name + "-info-card";
                 div.className = "character-card";
 
                 let name = document.createElement("h3");
-                name.innerHTML = "Name: " + characters[index[i]].name;
+                name.innerHTML = "Name: " + characters[n].name;
 
                 let job = document.createElement("h3");
-                job.innerHTML = "Job: " + characters[index[i]].job;
+                job.innerHTML = "Job: " + characters[n].job;
 
                 let personality = document.createElement("h3");
-                personality.innerHTML = "Personality: " + characters[index[i]].personality;
+                personality.innerHTML = "Personality: " + characters[n].personality;
 
                 div.appendChild(name);
                 div.appendChild(job);
@@ -106,10 +106,11 @@
             const nameMethod = nameForm.getAttribute('method');
 
             const nameField = nameForm.querySelector('#nameField');
-            const ageField = nameForm.querySelector('#ageField');
+            const jobField = nameForm.querySelector('#jobField');
+            const personalityField = nameForm.querySelector('#personalityField');
 
             //Build a data string in the FORM-URLENCODED format.
-            const formData = `name=${nameField.value}&age=${ageField.value}`;
+            const formData = `name=${nameField.value}&job=${jobField.value}&personality=${personalityField.value}`;
 
             //Make a fetch request and await a response. Set the method to
             //the one provided by the form (POST). Set the headers. Content-Type
@@ -143,7 +144,7 @@
     <h1>My Character World</h1>
     <section id="top">
         <h2>Add New Characters</h2>
-        <form id="nameForm" action="/addUser" method="post">
+        <form id="nameForm" action="/addCharacter" method="post">
             <label for="name">Name: </label>
             <input id="nameField" type="text" name="name" />
 
