@@ -8,15 +8,18 @@
 
 html,
 body {
-    /* height: 100%;
-    width: 100%; */
-    margin: 0;
+    height: 100%;
+    margin: 0 5%;
     padding: 0;
+}
+
+html{
+    background-color: rgb(226, 226, 226);
 }
 
 body {
     background-color: rgb(226, 226, 226);
-    border: 3px solid skyblue;
+    /* border: 3px solid blue; */
 }
 
 h1 {
@@ -25,16 +28,20 @@ h1 {
     margin: 2rem;
 }
 
-h2 {
+h2, h3 {
     width: fit-content;
     font-size: 1.2rem;
     color: rgb(219, 96, 24);
     font-weight: 550;
 }
 
+h3{
+    background-color: aliceblue;
+}
+
 #top,
 .character-card {
-    margin: 0 100px 30px 100px;
+    margin: 0 0 30px 0;
     border-radius: 12px;
     padding: 10px;
     border: 2px solid rgb(139, 137, 137);
@@ -64,10 +71,16 @@ input[type=text]:focus {
     /* border: 2px solid red; */
 }
 
+#character-field{
+    height: 60vh;
+    width: 20vw;
+    overflow-y: scroll;
+    border: 2px solid red;
+}
+
 .character-card {
-    margin: 5px 100px;
-    width: 30%;
+    margin: 5px 2px;
     background-color: rgb(139, 126, 126);
     color: aliceblue;
-    border: none;
+    border:3px solid green;
 }

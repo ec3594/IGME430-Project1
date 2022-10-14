@@ -7,34 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="style.css">
     <script>
-        const handleResponse = async(response) => {
+        const handleResponse = async (response) => {
             console.log("handling");
 
+            console.log("response.status: " + response.status);
             //Grab the character-field section
             const content = document.querySelector('#character-field');
 
-            // //Based on the status code, display something
-            // switch (response.status) {
-            //     case 200: //success
-            //         content.innerHTML = `<b>Success</b>`;
-            //         break;
-            //     case 201: //created
-            //         content.innerHTML = '<b>Created</b>';
-            //         break;
-            //     case 204: //updated (no response back from server)
-            //         content.innerHTML = '<b>Updated (No Content)</b>';
-            //         return;
-            //     case 400: //bad request
-            //         content.innerHTML = `<b>Bad Request</b>`;
-            //         break;
-            //     default: //any other status code
-            //         content.innerHTML = `Error code not implemented by client.`;
-            //         break;
-            // }
+            //Based on the status code, display something
+            switch (response.status) {
+                case 200: //success
+                    content.innerHTML = `<b>Success</b>`;
+                    break;
+                case 201: //created
+                    content.innerHTML = '<b>Created</b>';
+                    break;
+                case 204: //updated (no response back from server)
+                    content.innerHTML = '<b>Updated (No Content)</b>';
+                    return;
+                case 400: //bad request
+                    content.innerHTML = `<b>Bad Request</b>`;
+                    break;
+                default: //any other status code
+                    content.innerHTML = `Error code not implemented by client.`;
+                    break;
+            }
 
             //Parse the response to json. 
             let characters = await response.json();
@@ -64,13 +66,13 @@
                 div.id = characters[n].name + "-info-card";
                 div.className = "character-card";
 
-                let name = document.createElement("h3");
+                let name = document.createElement("h4");
                 name.innerHTML = "Name: " + characters[n].name;
 
-                let job = document.createElement("h3");
+                let job = document.createElement("h4");
                 job.innerHTML = "Job: " + characters[n].job;
 
-                let personality = document.createElement("h3");
+                let personality = document.createElement("h4");
                 personality.innerHTML = "Personality: " + characters[n].personality;
 
                 div.appendChild(name);
@@ -100,7 +102,7 @@
 
         //Uses fetch to send a postRequest. Marked as async because we use await
         //within it.
-        const sendPost = async(nameForm) => {
+        const sendPost = async (nameForm) => {
             //Grab all the info from the form
             const nameAction = nameForm.getAttribute('action');
             const nameMethod = nameForm.getAttribute('method');
@@ -142,9 +144,12 @@
 
 <body>
     <h1>My Character World</h1>
+
+    <!-- field for adding new characters -->
     <section id="top">
         <h2>Add New Characters</h2>
         <form id="nameForm" action="/addCharacter" method="post">
+            <!-- 3 text fields and 1 submit button -->
             <label for="name">Name: </label>
             <input id="nameField" type="text" name="name" />
 
@@ -157,12 +162,27 @@
             <input type="submit" value="Add" />
         </form>
     </section>
+
+    <!-- temporary field -->
+    <div id="content">
+
+    </div>
+
+    <!-- field for displaying all characters -->
     <div id="character-field">
+        <h3>My Characters</h3>
         <div class="character-card">
-            <h3>Name: </h3>
-            <h3>Job: </h3>
-            <h3>Personality: </h3>
+            <h4>Name: </h4>
+            <h4>Job: </h4>
+            <h4>Personality: </h4>
         </div>
+
+        <div class="character-card">
+            <h4>Name: </h4>
+            <h4>Job: </h4>
+            <h4>Personality: </h4>
+        </div>
+
 
     </div>
 </body>
