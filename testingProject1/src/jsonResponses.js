@@ -1,5 +1,5 @@
-// const users = {};
 const data = require('./../data/data.json');
+const characters = data.characters;
 
 //function to respond with a json object
 const respondJSON = (request, response, status, object) => {
@@ -14,12 +14,16 @@ const respondJSONMeta = (request, response, status) => {
     response.end();
 };
 
-//return users object as JSON
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//return characters object as JSON
 const getCharacters = (request, response) => {
-    const responseJSON = data.characters;
+    const responseJSON = characters;
 
     respondJSON(request, response, 200, responseJSON);
 };
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //function to add a character from a POST body
 const addCharacter = (request, response, body) => {
@@ -67,6 +71,8 @@ const addCharacter = (request, response, body) => {
     return respondJSONMeta(request, response, responseCode);
 };
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 // function for 404 not found requests with message
 const notFound = (request, response) => {
     //create error message for response
@@ -78,6 +84,8 @@ const notFound = (request, response) => {
     //return a 404 with an error message
     respondJSON(request, response, 404, responseJSON);
 };
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 module.exports = {
     getCharacters,

@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script>
         // handle response coming back from the server
-        const handleResponse = async (res) => {
+        const handleResponse = async(res) => {
 
             console.log("in handleResponse");
 
@@ -22,7 +22,7 @@
         }
 
         // send all requests here
-        const sendFetchRequest = async (url, method) => {
+        const sendFetchRequest = async(url, method) => {
             console.log("method: " + method);
 
             // grab the fields to reference the values in them
@@ -71,6 +71,7 @@
             const getButton = document.querySelector('#getButton');
             const aLink = document.querySelector('#aLink');
 
+            // cancels the forms default action and calls sendFetchRequest function above.
             const getCharacters = (e) => {
                 console.log("link is clicked");
                 e.preventDefault();
@@ -78,7 +79,6 @@
                 return false;
             }
 
-            // cancels the forms default action and calls sendFetchRequest function above.
             const addCharacter = (e) => {
                 e.preventDefault();
                 sendFetchRequest('/addCharacter', 'POST');
@@ -87,7 +87,6 @@
 
             //Call addUser when the submit event fires on the form.
             nameForm.addEventListener('submit', addCharacter);
-            getButton.addEventListener('click', getCharacters);
             aLink.addEventListener('click', getCharacters);
 
             // display default character at the start up
@@ -106,7 +105,6 @@
     <!-- field for adding new characters -->
     <div id="new-character-field">
         <a href="/getCharacters" id="aLink">/getCharacters</a>
-        <button id="getButton">/getCharacters</button>
         <h2>Add New Characters</h2>
         <form id="nameForm" action="/addCharacter" method="post">
 

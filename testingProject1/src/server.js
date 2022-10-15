@@ -12,6 +12,7 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 // GET urls
 const urlStruct = {
     '/': htmlHandler.getIndex,
+    '/favicon.ico': htmlHandler.getIndex,
     '/style.css': htmlHandler.getStyle,
     '/getCharacters': jsonHandler.getCharacters,
     notFound: jsonHandler.notFound,
