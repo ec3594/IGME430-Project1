@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+        // handle response coming back from the server
+        const handleResponse = async (res) => {
+
+            console.log("in handleResponse");
+
+            let obj = await res.json();
+            console.log(obj); // json object
+            console.log(obj.System); // works!
+            console.log(obj["System"]); // works!
+            console.log(obj[0]); // undefined
+
+        }
+
+        // send all requests here
+        const sendFetchRequest = async (url, method) => {
+            console.log("method: " + method);
+
+            // grab the fields to reference the values in them
+            const nameField = document.querySelector('#nameField');
+            const jobField = document.querySelector('#jobField');
+            const personalityField = document.querySelector('#personalityField');
+
+            // build a data string in the FORM-URLENCODED format.
+            const formData = `name=${nameField.value}&job=${jobField.value}&personality=${personalityField.value}`;
+
+
+            // GET request - get characters
+            if (method === "GET") {
+                console.log("sending GET request");
+                let response = await fetch(url, {
+                    method,
+                    // send the accept header
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                handleResponse(response);
+            }
+
+            // POST request - add, update, delete characters
+            else { // method=== 'POST'
+                console.log("sending POST request");
+                let response = await fetch(url, {
+                    method,
+                    // send the accept header
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json',
+                    },
+                    body: formData
+                });
+                handleResponse(response);
+            };
+        }
+
+        const init = () => {
+            console.log("in init");
+            // reference the fields and buttons
+            const addButton = document.querySelector('#addButton');
+            const nameForm = document.querySelector('#nameForm');
+            const getButton = document.querySelector('#getButton');
+            const aLink = document.querySelector('#aLink');
+
+            const getCharacters = (e) => {
+                console.log("link is clicked");
+                e.preventDefault();
+                sendFetchRequest('/getCharacters', 'GET');
+                return false;
+            }
+
+            // cancels the forms default action and calls sendFetchRequest function above.
+            const addCharacter = (e) => {
+                e.preventDefault();
+                sendFetchRequest('/addCharacter', 'POST');
+                return false;
+            }
+
+            //Call addUser when the submit event fires on the form.
+            nameForm.addEventListener('submit', addCharacter);
+            getButton.addEventListener('click', getCharacters);
+            aLink.addEventListener('click', getCharacters);
+
+            // display default character at the start up
+
+            // link up events to functions
+
+        }
+
+        window.onload = init;
+    </script>
+</head>
+
+<body>
+    <h1>My Character World</h1>
+
+    <!-- field for adding new characters -->
+    <div id="new-character-field">
+        <a href="/getCharacters" id="aLink">/getCharacters</a>
+        <button id="getButton">/getCharacters</button>
+        <h2>Add New Characters</h2>
+        <form id="nameForm" action="/addCharacter" method="post">
+
+            <!-- name field -->
+            <label for="name">Name: </label>
+            <input id="nameField" type="text" name="name" />
+
+            <!-- job field -->
+            <label for="job">Job: </label>
+            <input id="jobField" type="text" name="job" />
+
+            <!-- personality field -->
+            <label for="personality">Personality: </label>
+            <input id="personalityField" type="text" name="personality" />
+
+            <!-- submit button -->
+            <input type="submit" value="Add" id="addButton" />
+        </form>
+    </div>
+
+    <!-- temporary field -->
+    <div id="content">
+
+    </div>
+
+    <!-- field for displaying all characters -->
+    <div id="character-field">
+        <h2>My Characters</h2>
+        <div class="character-card">
+            <h3>Name: </h3>
+            <h3>Job: </h3>
+            <h3>Personality: </h3>
+        </div>
+
+        <div class="character-card">
+            <h3>Name: </h3>
+            <h3>Job: </h3>
+            <h3>Personality: </h3>
+        </div>
+
+    </div>
+</body>
+
+</html>

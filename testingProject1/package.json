@@ -1,0 +1,30 @@
+{
+  "name": "igme430-project1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"No Tests\""
+  },
+  "engines": {
+    "node": "v18.9.0",
+    "npm": "8.19.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ec3594/IGME430-Project1.git"
+  },
+  "author": "Elaine Chen",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/ec3594/IGME430-Project1/issues"
+  },
+  "homepage": "https://github.com/ec3594/IGME430-Project1#readme",
+  "devDependencies": {
+    "eslint": "^8.24.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0"
+  }
+}
