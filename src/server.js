@@ -9,19 +9,25 @@ const jsonHandler = require('./jsonResponses.js');
 // set port
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-//handle POST requests
-const handlePost = (request, response, parsedUrl) => {
-
-    //If they go to /addUser
-    if (parsedUrl.pathname === '/addCharacter') {
-
-        //Call our below parseBody handler, and in turn pass in the
-        //jsonHandler.addUser function as the handler callback function.
-        parseBody(request, response, jsonHandler.addCharacter);
-    }
+// GET urls
+const urlStruct = {
+    '/': htmlHandler.getIndex,
+    '/favicon.ico': htmlHandler.getIndex,
+    '/style.css': htmlHandler.getStyle,
+    '/getCharacters': jsonHandler.getCharacters,
+    notFound: jsonHandler.notFound,
 };
 
-//Recompiles the body of a request, and then calls the appropriate handler once completed
+
+// handle post request
+const handlePostRequest = (req, res, parsedUrl) => {
+    console.log("in handlePostRequest");
+    if (parsedUrl.pathname === '/addCharacter') {
+        parseBody(req, res, jsonHandler.addCharacter);
+    }
+}
+
+// Recompiles the body of a request, and then calls the appropriate handler once completed
 const parseBody = (request, response, handler) => {
 
     const body = [];
@@ -44,60 +50,26 @@ const parseBody = (request, response, handler) => {
     });
 };
 
-// randomly generate affirmations
-const respond = () => {
-    fetch('http://www.affirmations.dev/').then(res => res.json()).then(data => console.log(data));
-}
+const onRequest = (req, res) => {
+    console.log("in onRequest");
+    console.log("method: " + req.method);
+    const parsedUrl = url.parse(req.url);
+    const params = query.parse(parsedUrl.query);
 
-const loadData = async() => {
-    let obj = await fetch('https://reqres.in/api/users%27');
-    let json = await obj.json();
-    console.log(json.page);
-    console.log(json.per_page);
-    console.log(json.total);
-    console.log(json.data[0]);
-    console.log(json.data[0].id);
-}
-
-// or const asyncFunction = async function(){ // Old school function keyword? I like it! }
-
-const onRequest = (request, response) => {
-    const parsedUrl = url.parse(request.url);
-
-    console.log("request: " + parsedUrl.pathname);
-
-    // route to the functions according to the requested url
-    switch (parsedUrl.pathname) {
-        case '/':
-            htmlHandler.getIndex(request, response);
-            break;
-
-        case '/style.css':
-            htmlHandler.getStyle(request, response);
-            break;
-
-        case '/getCharacters':
-            jsonHandler.getCharacters(request, response);
-            break;
-
-        case '/addCharacter':
-            handlePost(request, response, parsedUrl);
-            break;
-
-        default:
-            response.writeHead(200, { 'Content-Type': 'application/json' });
-            // const res = fetch('https://reqres.in/api/users%27');
-            //console.log("res: " + res);
-            // const data = res.json();
-            // console.log("data: " + data);
-
-            // const data = fetch('https://reqres.in/api/users%27').then(res => res.json());
-            //console.log(obj);
-            //console.log(response);
-            //loadData();
-            response.end();
-            break;
-
+    // handle GET
+    if (req.method === 'GET') {
+        // if url exists
+        if (urlStruct[parsedUrl.pathname]) {
+            // route to the right handler 
+            urlStruct[parsedUrl.pathname](req, res, params);
+        } else {
+            // 404 notFound
+            urlStruct.notFound(req, res, params);
+        }
+    }
+    // handle post
+    else {
+        handlePostRequest(req, res, parsedUrl);
     }
 }
 

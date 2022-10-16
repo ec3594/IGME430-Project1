@@ -1,10 +1,5 @@
 {
     "characters": {
-        "System": {
-            "name": "Mr. System",
-            "job": "system",
-            "personality": "optimistic"
-        },
         "Eva": {
             "name": "Eva",
             "job": "animator",
